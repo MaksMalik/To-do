@@ -1,4 +1,4 @@
-let tasks = [];
+const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 const form = document.getElementById("addForm");
 const taskInput = document.getElementById("newTask");
 const taskList = document.getElementById("taskList");
@@ -54,6 +54,8 @@ function completeTask(index) {
 }
 
 function updateTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+
   taskList.innerHTML = "";
   for (let i = 0; i < tasks.length; i++) {
     let task = tasks[i];
@@ -75,14 +77,15 @@ function updateTasks() {
       tasks.splice(dropIndex, 0, task);
       updateTasks();
     });
-    task.completed ? li.style.backgroundColor = "#00000045" : li.style.backgroundColor = ""
+    task.completed ? (li.style.backgroundColor = "#00000045") : (li.style.backgroundColor = "");
     li.innerHTML = `
       <span class="${task.completed ? "completed" : ""}">
         ${task.name}
       </span>
       <span>
         <button onclick="editTask(${i})">Edit</button>
-        <button onclick="completeTask(${i})">${task.completed ? "Done" : "Not done"}</button>
+        <button onclick="completeTask(${i})">${task.completed ? "Done" : "Not done"
+      }</button>
         <button onclick="moveTaskUp(${i})">↑</button>
         <button onclick="moveTaskDown(${i})">↓</button>
         <button class="remove-btn" onclick="removeTask(${i})">x</button>
@@ -91,5 +94,7 @@ function updateTasks() {
     taskList.appendChild(li);
   }
 }
+
+updateTasks();
 
 form.addEventListener("submit", addTask);
