@@ -71,19 +71,15 @@ function updateTasks() {
       const activeTask = document.querySelector('.dragging');
       if (activeTask !== null && activeTask !== li) {
         const currentTaskBounding = li.getBoundingClientRect();
-        const nextTaskBounding = (li.nextElementSibling !== null) ? li.nextElementSibling.getBoundingClientRect() : null;
-        if (e.clientY < currentTaskBounding.top + (currentTaskBounding.height / 2)) {
-          taskList.insertBefore(activeTask, li);
-          tasks.splice(i, 0, tasks.splice(draggedTask, 1)[0]);
-          draggedTask = i;
-        } else if (nextTaskBounding !== null && e.clientY > nextTaskBounding.top + (nextTaskBounding.height / 2)) {
+        const isMiddle = (e.clientY - currentTaskBounding.top) / currentTaskBounding.height > 0.5;
+        if (isMiddle) {
           taskList.insertBefore(activeTask, li.nextElementSibling);
           tasks.splice(i + 1, 0, tasks.splice(draggedTask, 1)[0]);
           draggedTask = i + 1;
-        } else if (li === taskList.lastElementChild && e.clientY > currentTaskBounding.bottom) {
-          taskList.appendChild(activeTask);
-          tasks.push(tasks.splice(draggedTask, 1)[0]);
-          draggedTask = tasks.length - 1;
+        } else {
+          taskList.insertBefore(activeTask, li);
+          tasks.splice(i, 0, tasks.splice(draggedTask, 1)[0]);
+          draggedTask = i;
         }
       }
     });
