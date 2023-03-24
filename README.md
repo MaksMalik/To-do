@@ -1,3 +1,5 @@
 # To-do
 
-Simple JS, without saving. 
+Simple JS with saving in browser data
+
+https://to-do-to.netlify.app/
