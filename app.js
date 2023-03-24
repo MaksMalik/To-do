@@ -55,7 +55,6 @@ function completeTask(index) {
 
 function updateTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
-
   taskList.innerHTML = "";
   for (let i = 0; i < tasks.length; i++) {
     let task = tasks[i];
@@ -72,7 +71,15 @@ function updateTasks() {
       if (activeTask !== null && activeTask !== li) {
         const currentTaskBounding = li.getBoundingClientRect();
         const isMiddle = (e.clientY - currentTaskBounding.top) / currentTaskBounding.height > 0.5;
-        if (isMiddle) {
+        if (li === taskList.lastElementChild && !isMiddle) {
+          taskList.appendChild(activeTask);
+          tasks.splice(tasks.length, 0, tasks.splice(draggedTask, 1)[0]);
+          draggedTask = tasks.length - 1;
+        } else if (li === taskList.firstElementChild && isMiddle) {
+          taskList.insertBefore(activeTask, li);
+          tasks.splice(0, 0, tasks.splice(draggedTask, 1)[0]);
+          draggedTask = 0;
+        } else if (isMiddle) {
           if (li.nextElementSibling !== null && li.nextElementSibling !== activeTask) {
             taskList.insertBefore(activeTask, li.nextElementSibling);
             tasks.splice(i + 1, 0, tasks.splice(draggedTask, 1)[0]);
