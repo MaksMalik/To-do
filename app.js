@@ -73,13 +73,17 @@ function updateTasks() {
         const currentTaskBounding = li.getBoundingClientRect();
         const isMiddle = (e.clientY - currentTaskBounding.top) / currentTaskBounding.height > 0.5;
         if (isMiddle) {
-          taskList.insertBefore(activeTask, li.nextElementSibling);
-          tasks.splice(i + 1, 0, tasks.splice(draggedTask, 1)[0]);
-          draggedTask = i + 1;
+          if (li.nextElementSibling !== null && li.nextElementSibling !== activeTask) {
+            taskList.insertBefore(activeTask, li.nextElementSibling);
+            tasks.splice(i + 1, 0, tasks.splice(draggedTask, 1)[0]);
+            draggedTask = i + 1;
+          }
         } else {
-          taskList.insertBefore(activeTask, li);
-          tasks.splice(i, 0, tasks.splice(draggedTask, 1)[0]);
-          draggedTask = i;
+          if (li.previousElementSibling !== null && li.previousElementSibling !== activeTask) {
+            taskList.insertBefore(activeTask, li);
+            tasks.splice(i, 0, tasks.splice(draggedTask, 1)[0]);
+            draggedTask = i;
+          }
         }
       }
     });
