@@ -53,47 +53,47 @@ function completeTask(index) {
   updateTasks();
 }
 
-function updateTasks() {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-  taskList.innerHTML = "";
-  for (let i = 0; i < tasks.length; i++) {
-    let task = tasks[i];
-    let li = document.createElement("li");
-    li.draggable = true;
-    li.addEventListener("dragstart", function (e) {
-      li.classList.add('dragging');
-      draggedTask = i;
-      e.dataTransfer.setData("text/plain", i);
-    });
-    li.addEventListener("dragover", function (e) {
-      e.preventDefault();
-      const activeTask = document.querySelector('.dragging');
-      if (activeTask !== null && activeTask !== li) {
-        const currentTaskBounding = li.getBoundingClientRect();
-        const isMiddle = (e.clientY - currentTaskBounding.top) / currentTaskBounding.height > 0.5;
-        if (li === taskList.lastElementChild && !isMiddle) {
-          taskList.appendChild(activeTask);
-          tasks.splice(tasks.length, 0, tasks.splice(draggedTask, 1)[0]);
-          draggedTask = tasks.length - 1;
-        } else if (li === taskList.firstElementChild && isMiddle) {
-          taskList.insertBefore(activeTask, li);
-          tasks.splice(0, 0, tasks.splice(draggedTask, 1)[0]);
-          draggedTask = 0;
-        } else if (isMiddle) {
-          if (li.nextElementSibling !== null && li.nextElementSibling !== activeTask) {
-            taskList.insertBefore(activeTask, li.nextElementSibling);
-            tasks.splice(i + 1, 0, tasks.splice(draggedTask, 1)[0]);
-            draggedTask = i + 1;
-          }
-        } else {
-          if (li.previousElementSibling !== null && li.previousElementSibling !== activeTask) {
+  function updateTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    taskList.innerHTML = "";
+    for (let i = 0; i < tasks.length; i++) {
+      let task = tasks[i];
+      let li = document.createElement("li");
+      li.draggable = true;
+      li.addEventListener("dragstart", function (e) {
+        li.classList.add('dragging');
+        draggedTask = i;
+        e.dataTransfer.setData("text/plain", i);
+      });
+      li.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        const activeTask = document.querySelector('.dragging');
+        if (activeTask !== null && activeTask !== li) {
+          const currentTaskBounding = li.getBoundingClientRect();
+          const isMiddle = (e.clientY - currentTaskBounding.top) / currentTaskBounding.height > 0.5;
+          if (li === taskList.lastElementChild && !isMiddle) {
+            taskList.appendChild(activeTask);
+            tasks.splice(tasks.length, 0, tasks.splice(draggedTask, 1)[0]);
+            draggedTask = tasks.length - 1;
+          } else if (li === taskList.firstElementChild && isMiddle) {
             taskList.insertBefore(activeTask, li);
-            tasks.splice(i, 0, tasks.splice(draggedTask, 1)[0]);
-            draggedTask = i;
+            tasks.splice(0, 0, tasks.splice(draggedTask, 1)[0]);
+            draggedTask = 0;
+          } else if (isMiddle) {
+            if (li.nextElementSibling !== null && li.nextElementSibling !== activeTask) {
+              taskList.insertBefore(activeTask, li.nextElementSibling);
+              tasks.splice(i + 1, 0, tasks.splice(draggedTask, 1)[0]);
+              draggedTask = i + 1;
+            }
+          } else {
+            if (li.previousElementSibling !== null && li.previousElementSibling !== activeTask) {
+              taskList.insertBefore(activeTask, li);
+              tasks.splice(i, 0, tasks.splice(draggedTask, 1)[0]);
+              draggedTask = i;
+            }
           }
         }
-      }
-    });
+      });
     li.addEventListener("dragend", function () {
       li.classList.remove('dragging');
       updateTasks();
