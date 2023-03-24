@@ -1,5 +1,5 @@
 body {
-  background-color: #f6f8fa;
+  background-color: #e8edf1;
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
@@ -12,7 +12,9 @@ h1 {
   color: #2d2d2d;
   font-size: 3rem;
   margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
 }
+
 
 #addForm {
   display: flex;
@@ -26,7 +28,7 @@ h1 {
   border: none;
   border-radius: 5px;
   margin-right: 1rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   flex-grow: 1;
 }
 
@@ -36,8 +38,24 @@ h1 {
   border: none;
   border-radius: 5px;
   padding: 1rem 2rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   cursor: pointer;
+}
+
+#addForm button[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+#addForm button[type="submit"]:hover {
+  transform: scale(1.1);
+  background-color: #0069d9;
 }
 
 ul {
@@ -49,7 +67,7 @@ ul {
 
 li {
   background-color: #fff;
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 5px;
   margin-bottom: 1rem;
   display: flex;
@@ -58,12 +76,13 @@ li {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
   cursor: move; /* dodajemy nową właściwość */
-    word-break: break-all;
-
+  word-break: break-all;
+  background: linear-gradient(135deg, #ffffff98 0%, #f2f2f29a 100%);
+  transition: transform 0.2s ease-in-out;
 }
 
 li span {
-  max-width: 50%;
+  max-width: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,22 +97,26 @@ li:hover {
   background-color: #f2f2f2;
   color: #888;
   text-decoration: line-through;
-  
 }
 
 button {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 0.7rem;
   color: #007bff;
   transition: transform 0.2s ease-in-out;
+  padding: 0.4rem 0.4rem;
+  border-radius: 5px;
+  border: 1px solid #007bff;
+  margin: 0.1rem;
 }
 
 button:hover {
-  transform: scale(1.2);
+  transform: translateY(-3px);
+  background-color: #007bff9c;
+  color: #fff;
 }
-
 
 .btn-container {
   display: flex;
@@ -120,8 +143,26 @@ button:hover {
   }
 }
 
-
 .remove-btn {
+  color: #dc3545;
+  transition: all 0.2s ease-in-out;
+}
+
+.dragging {
+  opacity: 0.5;
+}
+
+li {
+transition: all 0.3s ease-in-out;
+}
+
+.dragging {
+transform: scale(1.03);
+transition: all 0.3s ease-in-out;
+opacity: 0.7;
+}
+
+.fa-trash{
   color: red;
-  font-size: 30px; 
+
 }
