@@ -62,39 +62,48 @@ function updateTasks() {
     let li = document.createElement("li");
     li.draggable = true;
     li.addEventListener("dragstart", function (e) {
+      li.classList.add('dragging');
       draggedTask = i;
-      e.dataTransfer.setData("text/plain", "");
+      e.dataTransfer.setData("text/plain", i);
     });
     li.addEventListener("dragover", function (e) {
       e.preventDefault();
-    });
-    li.addEventListener("drop", function (e) {
-      let dropIndex = i;
-      if (draggedTask < dropIndex) {
-        dropIndex--;
+      const activeTask = document.querySelector('.dragging');
+      if (activeTask !== null && activeTask !== li) {
+        const currentTaskBounding = li.getBoundingClientRect();
+        const nextTaskBounding = (li.nextElementSibling !== null) ? li.nextElementSibling.getBoundingClientRect() : null;
+        if (e.clientY < currentTaskBounding.top + (currentTaskBounding.height / 2)) {
+          taskList.insertBefore(activeTask, li);
+          tasks.splice(i, 0, tasks.splice(draggedTask, 1)[0]);
+          draggedTask = i;
+        } else if (nextTaskBounding !== null && e.clientY > nextTaskBounding.top + (nextTaskBounding.height / 2)) {
+          taskList.insertBefore(activeTask, li.nextElementSibling);
+          tasks.splice(i + 1, 0, tasks.splice(draggedTask, 1)[0]);
+          draggedTask = i + 1;
+        } else if (li === taskList.lastElementChild && e.clientY > currentTaskBounding.bottom) {
+          taskList.appendChild(activeTask);
+          tasks.push(tasks.splice(draggedTask, 1)[0]);
+          draggedTask = tasks.length - 1;
+        }
       }
-      let [task] = tasks.splice(draggedTask, 1);
-      tasks.splice(dropIndex, 0, task);
+    });
+    li.addEventListener("dragend", function () {
+      li.classList.remove('dragging');
       updateTasks();
     });
-    task.completed ? (li.style.backgroundColor = "#00000045") : (li.style.backgroundColor = "");
-    li.innerHTML = `
-      <span class="${task.completed ? "completed" : ""}">
-        ${task.name}
-      </span>
-      <span>
-        <button onclick="editTask(${i})">Edit</button>
-        <button onclick="completeTask(${i})">${task.completed ? "Done" : "Not done"
-      }</button>
-        <button onclick="moveTaskUp(${i})">↑</button>
-        <button onclick="moveTaskDown(${i})">↓</button>
-        <button class="remove-btn" onclick="removeTask(${i})">x</button>
-      </span>
-    `;
+    task.completed ? (li.style.backgroundColor = "lightgreen") : (li.style.backgroundColor = "white");
+    li.innerHTML = `<span class="taskName">${task.name}</span>
+    <div class="buttons">
+      <button class="editButton" onclick="editTask(${i})"><i class="fas fa-edit"></i></button>
+      <button class="upButton" onclick="moveTaskUp(${i})"><i class="fas fa-arrow-up"></i></button>
+      <button class="downButton" onclick="moveTaskDown(${i})"><i class="fas fa-arrow-down"></i></button>
+      <button class="removeButton" onclick="removeTask(${i})"><i class="fas fa-trash"></i></button>
+      <button class="completeButton" onclick="completeTask(${i})"><i class="fas fa-check"></i></button>
+    </div>`;
     taskList.appendChild(li);
   }
 }
 
-updateTasks();
 
 form.addEventListener("submit", addTask);
+updateTasks();
